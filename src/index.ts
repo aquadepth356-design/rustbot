@@ -210,7 +210,7 @@ const commands = [
 
 async function registerCommands(): Promise<void> {
   const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
-  await rest.put(Routes.applicationGuildCommands(env.DISCORD_GUILD_ID, env.DISCORD_GUILD_ID), {
+  await rest.put(Routes.applicationGuildCommands(env.DISCORD_APPLICATION_ID, env.DISCORD_GUILD_ID), {
     body: commands
   });
 }

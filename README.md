@@ -1,30 +1,56 @@
-# rustbot
+# Rustbot Ops Bot (TypeScript)
 
-Discord "Ops" bot for a Rust server.
+This repo contains a Discord “Ops” bot for a Rust server.
 
-## Features (v1)
+## What it does (v1)
 
-- Live **server status** message updated on a timer (via RCON)
-- **Wipe countdown** announcements (bi-weekly: every other Thursday @ 5:00 PM Central)
-- **Restart countdown** announcements (every day @ 12:00 AM / 12:00 PM Central)
+- Updates a **single live status message** in Discord (polls server via RCON)
+- Sends **wipe countdown** announcements (bi-weekly: every other Thursday @ 5:00 PM Central)
+- Sends **restart countdown** announcements (every day @ 12:00 AM / 12:00 PM Central)
 
-> Account linking is handled by off-the-shelf uMod plugins (not this bot).
+Account linking is handled by off-the-shelf uMod plugins (not this bot).
 
-## Local setup
+## Requirements
 
-1. Create a Discord application + bot and invite it to your server.
-2. Copy `.env.example` to `.env` and fill values.
-3. Install dependencies and run.
+- Node.js (LTS recommended)
+- Discord bot token
+- RCON access to your Rust server
+
+## Setup
+
+1. Install dependencies:
 
 ```bash
 npm install
+```
+
+2. Create `.env`:
+
+- Copy `.env.example` → `.env`
+- Fill in `DISCORD_TOKEN`, IDs, and `RCON_PASSWORD`
+
+3. Run in dev mode:
+
+```bash
 npm run dev
 ```
 
-## Configuration
+## First-time Discord setup
 
-- Timezone: `America/Chicago`
-- RCON host/port: `167.160.93.169:28026`
-- Wipe anchor: `2026-05-28 17:00 CT`
+- Invite the bot with OAuth2 scopes: `bot`, `applications.commands`
+- Bot permissions (minimum): View Channels, Send Messages, Embed Links, Read Message History
 
-See `.env.example` for all settings.
+## Commands
+
+### Staff
+- `/setup status` posts a status message in the configured channel and starts updating it.
+
+### Public
+- `/wipe` shows next wipe time and countdown
+- `/restart` shows next restart time and countdown
+
+## Notes
+
+- Timezone is **America/Chicago** (Central Time).
+- Wipe anchor is `2026-05-28 17:00 CT` (bi-weekly schedule).
+- Restart schedule is fixed at `00:00 CT` and `12:00 CT`.

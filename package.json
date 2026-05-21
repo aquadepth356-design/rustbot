@@ -1,0 +1,32 @@
+{
+  "name": "rustbot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "format": "prettier -w .",
+    "check": "npm run lint && prettier -c . && npm run build"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.4.5",
+    "luxon": "^3.5.0",
+    "rcon-srcds": "^1.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.3.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.10.1",
+    "eslint": "^9.3.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.0.0"
+  }
+}

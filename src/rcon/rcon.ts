@@ -1,4 +1,4 @@
-import { Rcon } from 'rcon-srcds';
+import { Rcon } from 'rcon-client';
 
 export type RconConfig = {
   host: string;
@@ -13,48 +13,29 @@ export type ServerPop = {
 };
 
 export async function fetchPopulation(cfg: RconConfig): Promise<ServerPop> {
-  // Rust servers typically support 'status' which includes player info.
-  // We'll parse max/online if possible; otherwise keep raw.
-  const rcon = new Rcon({
-    address: cfg.host,
+  // Rust servers support `status` via RCON.
+  // We'll parse online/max if possible; otherwise keep raw.
+  const rcon = await Rcon.connect({
+    host: cfg.host,
     port: cfg.port,
     password: cfg.password
   });
 
-  return await new Promise<ServerPop>((resolve, reject) => {
-    let resolved = false;
+  try {
+    const out = await rcon.send('status');
 
-    rcon.on('authenticated', async () => {
-      try {
-        const out = await rcon.execute('status');
-        rcon.disconnect();
-
-        // Try to parse patterns like "players : 12 (100 max)" depending on Rust output.
-        const text = String(out);
-        const m = /players\s*:\s*(\d+)\s*\(\s*(\d+)\s*max\s*\)/i.exec(text);
-        if (m) {
-          resolve({ online: Number(m[1]), max: Number(m[2]), raw: text });
-        } else {
-          resolve({ raw: text });
-        }
-      } catch (e) {
-        rcon.disconnect();
-        reject(e);
-      }
-    });
-
-    rcon.on('error', (err) => {
-      if (!resolved) {
-        resolved = true;
-        try {
-          rcon.disconnect();
-        } catch {
-          // ignore
-        }
-        reject(err);
-      }
-    });
-
-    rcon.connect();
-  });
+    const text = String(out);
+    const m = /players\s*:\s*(\d+)\s*\(\s*(\d+)\s*max\s*\)/i.exec(text);
+    if (m) {
+      return { online: Number(m[1]), max: Number(m[2]), raw: text };
+    }
+    return { raw: text };
+  } finally {
+    // Ensure the socket is always closed and never crashes the process.
+    try {
+      await rcon.end();
+    } catch {
+      // ignore
+    }
+  }
 }

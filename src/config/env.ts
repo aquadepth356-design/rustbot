@@ -1,5 +1,6 @@
 export type Env = {
   DISCORD_TOKEN: string;
+  DISCORD_APPLICATION_ID: string;
   DISCORD_GUILD_ID: string;
   STATUS_CHANNEL_ID: string;
   ANNOUNCE_CHANNEL_ID: string;
@@ -31,6 +32,7 @@ export function loadEnv(): Env {
 
   return {
     DISCORD_TOKEN: req('DISCORD_TOKEN'),
+    DISCORD_APPLICATION_ID: req('DISCORD_APPLICATION_ID'),
     DISCORD_GUILD_ID: req('DISCORD_GUILD_ID'),
     STATUS_CHANNEL_ID: req('STATUS_CHANNEL_ID'),
     ANNOUNCE_CHANNEL_ID: req('ANNOUNCE_CHANNEL_ID'),
